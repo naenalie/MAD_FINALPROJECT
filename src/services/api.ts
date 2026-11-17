@@ -1,5 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-export const API_URL = (process.env.EXPO_PUBLIC_API_URL || 'http://10.0.2.2:3000').replace(/\/$/, '');
+import {Platform} from 'react-native';
+// Android emulator reaches the host computer through 10.0.2.2; a browser (Expo web) must use localhost.
+// EXPO_PUBLIC_API_URL wins when set, except that a 10.0.2.2 value is rewritten to localhost on web,
+// so one .env works for both the emulator and the web preview.
+function resolveApiUrl() {
+  const fallback = Platform.OS === 'web' ? 'http://localhost:3000' : 'http://10.0.2.2:3000';
+  const url = (process.env.EXPO_PUBLIC_API_URL || fallback).replace(/\/$/, '');
+  return Platform.OS === 'web' ? url.replace('://10.0.2.2', '://localhost') : url;
+}
+export const API_URL = resolveApiUrl();
 export type User = { id:string; name:string; email:string; role:'user'|'petugas'|'admin'; counterId:string|null };
 export type Event = { id:string; name:string; prefix:string; quotaPerDay:number; status:'open'|'paused'|'closed'; description:string };
 export type Counter = { id:string; name:string; eventId:string; petugasId:string };
@@ -15,4 +24,5 @@ export async function request<T>(path:string,user?:User|null,body?:object):Promi
   finally { clearTimeout(timeout); }
   const data=await response.json(); if(!response.ok) throw new ApiError(data.error||'Permintaan gagal', data.code); return data as T;
 }
+export const prefs={loadVibrate:async()=>(await AsyncStorage.getItem('campusqueue.vibrate'))!=='off',saveVibrate:(on:boolean)=>AsyncStorage.setItem('campusqueue.vibrate',on?'on':'off')};
 export const session={load:async()=>{const v=await AsyncStorage.getItem('campusqueue.session');return v?JSON.parse(v) as User:null;},save:(u:User)=>AsyncStorage.setItem('campusqueue.session',JSON.stringify(u)),clear:()=>AsyncStorage.removeItem('campusqueue.session')};
