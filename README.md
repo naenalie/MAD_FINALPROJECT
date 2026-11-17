@@ -4,6 +4,23 @@ Aplikasi antrean layanan kampus berbasis Expo/React Native (SDK 58) untuk Androi
 
 Tampilan mengikuti desain Figma CampusQueue (gaya kaca/glassmorphism, font Inter): login, beranda, ambil antrean, antrean saya, tiket, riwayat, profil, kontrol loket dan daftar antrean petugas, serta kelola, loket & petugas, dan statistik admin.
 
+## Cara cepat
+
+```powershell
+git clone https://github.com/naenalie/MAD_FINALPROJECT.git
+cd MAD_FINALPROJECT
+npm install        # sekali saja setelah clone
+```
+
+Lalu buka dua terminal di folder proyek:
+
+```powershell
+npm run api        # terminal 1: server API
+npm start          # terminal 2: tekan a untuk membuka di Android Emulator
+```
+
+Tidak perlu membuat `.env` untuk emulator; aplikasi otomatis memakai `http://10.0.2.2:3000`. Masuk dengan akun demo di bawah. Detail lengkap ada di bagian berikut.
+
 ## Prasyarat
 
 - **Git** dan **Node.js 22.13+ atau 24.3+** (LTS) beserta npm — React Native 0.88/Expo 58 tidak berjalan di Node 20. Cek dengan `node --version`, `npm --version`, `git --version`.
@@ -12,21 +29,14 @@ Tampilan mengikuti desain Figma CampusQueue (gaya kaca/glassmorphism, font Inter
 
 Semua dependensi (termasuk font Inter, ikon, dan gradien) terpasang lewat `npm ci`; tidak ada langkah tambahan.
 
-## Menjalankan
+## Menjalankan (detail)
 
-```powershell
-git clone https://github.com/naenalie/MAD_FINALPROJECT.git
-cd MAD_FINALPROJECT
-npm ci
-Copy-Item .env.example .env
-```
-
-(Di macOS/Linux gunakan `cp .env.example .env`.)
+Setelah clone, pasang dependensi sekali dengan `npm install` (atau `npm ci` untuk versi persis dari lockfile). File `.env` opsional — hanya perlu untuk ponsel fisik (lihat tabel di bawah); salin dari `.env.example` bila diperlukan.
 
 Terminal 1 — server API (port 3000):
 
 ```powershell
-npm run backend
+npm run api
 ```
 
 Buka `http://localhost:3000/health` di browser untuk memastikan server hidup.
@@ -51,7 +61,7 @@ Tekan `a` untuk membuka di emulator Android. Setelah mengubah `.env`, mulai ulan
 
 ### Jika ada kendala
 
-- **"Tidak dapat terhubung ke server"**: pastikan `npm run backend` masih berjalan dan alamat `.env` sesuai tabel di atas.
+- **"Tidak dapat terhubung ke server"**: pastikan `npm run api` masih berjalan dan alamat `.env` sesuai tabel di atas.
 - **Port 8081 dipakai**: jalankan `npx expo start --port 8082`.
 - **Emulator gagal start karena disk penuh**: emulator butuh beberapa GB ruang kosong di drive tempat AVD disimpan. Hapus snapshot di Device Manager atau cache yang bisa dibuat ulang (mis. `npm cache clean --force`).
 - **Tampilan lama/tidak berubah**: `npx expo start --clear`.
